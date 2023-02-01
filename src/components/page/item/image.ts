@@ -1,6 +1,6 @@
 export class ImageComponent {
+  //my previous code
   private element: HTMLElement;
-
   constructor(imgsrc: string, title: string) {
     // this.element = document.createElement("section");
     // const imgElement = document.createElement("img");

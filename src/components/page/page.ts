@@ -1,5 +1,6 @@
 //parent container about page
 export class PageComponent {
+  //기존 코드
   private element: HTMLUListElement; //카드 목록
   constructor() {
     this.element = document.createElement("ul");

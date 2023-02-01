@@ -1,13 +1,25 @@
-import { ImageComponent } from "./components/page/item/image.js";
-import { PageComponent } from "./components/page/page.js"; //import시 확장명 작성
+// import { ImageComponent } from "./components/page/item/image.js";
+import { ImageComponentRefactor } from "./components/page/item/imageRefactor.js";
+// import { PageComponent } from "./components/page/page.js"; //import시 확장명 작성
+import { PageComponentRefactor } from "./components/page/pageRefactor.js";
 
 class App {
-  private readonly page: PageComponent;
+  // private readonly page: PageComponent;
+  private readonly page: PageComponentRefactor; //refactor이후
 
   constructor(appRoot: HTMLElement) {
-    this.page = new PageComponent();
+    // this.page = new PageComponent();
+    // this.page.attachTo(appRoot);
+    // const imgComponent = new ImageComponent(
+    //   "https://picsum.photos/seed/picsum/200/300",
+    //   "hi img title"
+    // );
+    // imgComponent.attachTo(appRoot, "beforeend");
+
+    //refactor
+    this.page = new PageComponentRefactor();
     this.page.attachTo(appRoot);
-    const imgComponent = new ImageComponent(
+    const imgComponent = new ImageComponentRefactor(
       "https://picsum.photos/seed/picsum/200/300",
       "hi img title"
     );
