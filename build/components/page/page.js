@@ -1,10 +1,26 @@
-export class PageComponent {
+import { BaseComponent } from "../basecomponent.js";
+export class PageComponent extends BaseComponent {
     constructor() {
-        this.element = document.createElement("ul");
-        this.element.setAttribute("class", "page");
-        this.element.textContent = "This is PageComponent";
+        super(`<ul class='page'></ul>`);
     }
-    attachTo(parent, position = "afterbegin") {
-        parent.insertAdjacentElement(position, this.element);
+    addChild(child) {
+        const pageItem = new PageItemComponent();
+        pageItem.addChild(child);
+        pageItem.attachTo(this.element, "beforeend");
+    }
+}
+export class PageItemComponent extends BaseComponent {
+    constructor() {
+        super(`
+    <li class="page-item">
+    <div class="page-item__body"></div>
+    <div class="page-item__controls">
+        <button class="x-button">&times;</button>
+      </div>
+      </li>`);
+    }
+    addChild(child) {
+        const container = this.element.querySelector(".page-item__body");
+        child.attachTo(container);
     }
 }
