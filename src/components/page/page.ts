@@ -33,6 +33,14 @@ export class PageItemComponent
         <button class="x-button">&times;</button>
       </div>
       </li>`);
+
+    //삭제
+    const xButton = this.element.querySelector(
+      ".x-button"
+    )! as HTMLButtonElement;
+    xButton.addEventListener("click", () => {
+      this.element.remove();
+    });
   }
 
   addChild(child: Component): void {

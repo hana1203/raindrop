@@ -18,6 +18,10 @@ export class PageItemComponent extends BaseComponent {
         <button class="x-button">&times;</button>
       </div>
       </li>`);
+        const xButton = this.element.querySelector(".x-button");
+        xButton.addEventListener("click", () => {
+            this.element.remove();
+        });
     }
     addChild(child) {
         const container = this.element.querySelector(".page-item__body");
