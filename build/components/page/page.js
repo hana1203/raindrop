@@ -7,6 +7,9 @@ export class PageComponent extends BaseComponent {
         const pageItem = new PageItemComponent();
         pageItem.addChild(child);
         pageItem.attachTo(this.element, "beforeend");
+        pageItem.setOnCloseListener(() => {
+            pageItem.removeFrom(this.element);
+        });
     }
 }
 export class PageItemComponent extends BaseComponent {
@@ -19,12 +22,15 @@ export class PageItemComponent extends BaseComponent {
       </div>
       </li>`);
         const xButton = this.element.querySelector(".x-button");
-        xButton.addEventListener("click", () => {
-            this.element.remove();
-        });
+        xButton.onclick = () => {
+            this.closeListener && this.closeListener();
+        };
     }
     addChild(child) {
         const container = this.element.querySelector(".page-item__body");
         child.attachTo(container);
+    }
+    setOnCloseListener(listner) {
+        this.closeListener = listner;
     }
 }

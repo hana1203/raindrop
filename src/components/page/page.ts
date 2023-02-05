@@ -10,21 +10,27 @@ export class PageComponent
   extends BaseComponent<HTMLUListElement>
   implements Composable
 {
+  //dependency injection
   constructor() {
     super(`<ul class='page'></ul>`); //call parent's constructor
   }
-
   addChild(child: Component): void {
     const pageItem = new PageItemComponent();
     pageItem.addChild(child);
     pageItem.attachTo(this.element, "beforeend");
+    pageItem.setOnCloseListener(() => {
+      pageItem.removeFrom(this.element);
+    });
   }
 }
+
+type OnCloseListener = () => void; //아무런 인자도 받지않고 아무런것도 리턴하지않는 함수
 
 export class PageItemComponent
   extends BaseComponent<HTMLElement>
   implements Composable
 {
+  private closeListener?: OnCloseListener;
   constructor() {
     super(`
     <li class="page-item">
@@ -34,13 +40,21 @@ export class PageItemComponent
       </div>
       </li>`);
 
-    //삭제
+    //DOM에서 제거하기
+    // const xButton = this.element.querySelector(
+    //   ".x-button"
+    // )! as HTMLButtonElement;
+    // xButton.addEventListener("click", () => {
+    //   this.clickCloseBtn();
+    // });
+
+    //Ellie's solution. item 삭제
     const xButton = this.element.querySelector(
       ".x-button"
     )! as HTMLButtonElement;
-    xButton.addEventListener("click", () => {
-      this.element.remove();
-    });
+    xButton.onclick = () => {
+      this.closeListener && this.closeListener(); //closeListner가 null이아니라면 closeListner() 호출
+    };
   }
 
   addChild(child: Component): void {
@@ -49,4 +63,12 @@ export class PageItemComponent
     )! as HTMLElement;
     child.attachTo(container);
   }
+
+  setOnCloseListener(listner: OnCloseListener) {
+    this.closeListener = listner;
+  }
+
+  // clickCloseBtn(): void {
+  //   this.element.remove();
+  // }
 }
