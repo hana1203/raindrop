@@ -13,7 +13,8 @@ class App {
   // private readonly page: PageComponent;
   private readonly page: Component & Composable; //page변수가 Page컴포넌트인지 아닌지는 잘 모름 - PageComponent라고 커플링하기보다
   constructor(appRoot: HTMLElement) {
-    this.page = new PageComponent();
+    // this.page = new PageComponent();
+    this.page = new PageComponent(PageItemComponent); //dependency injection이후
     this.page.attachTo(appRoot);
 
     //pageitem 띄워보기

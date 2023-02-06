@@ -6,16 +6,21 @@ export interface Composable {
   addChild(child: Component): void;
 }
 
+type ItemContainerConstructor = {
+  new (): ItemContainer; //생성자 타입 정의
+};
+
 export class PageComponent
   extends BaseComponent<HTMLUListElement>
   implements Composable
 {
   //dependency injection
-  constructor() {
+  constructor(private pageItemConstructor: ItemContainerConstructor) {
     super(`<ul class='page'></ul>`); //call parent's constructor
   }
   addChild(child: Component): void {
-    const pageItem = new PageItemComponent();
+    // const pageItem = new PageItemComponent();
+    const pageItem = new this.pageItemConstructor();
     pageItem.addChild(child);
     pageItem.attachTo(this.element, "beforeend");
     pageItem.setOnCloseListener(() => {
@@ -26,9 +31,13 @@ export class PageComponent
 
 type OnCloseListener = () => void; //아무런 인자도 받지않고 아무런것도 리턴하지않는 함수
 
+interface ItemContainer extends Component, Composable {
+  setOnCloseListener(listner: OnCloseListener): void;
+}
+
 export class PageItemComponent
   extends BaseComponent<HTMLElement>
-  implements Composable
+  implements ItemContainer
 {
   private closeListener?: OnCloseListener;
   constructor() {
