@@ -1,4 +1,5 @@
 import { Component } from "./components/basecomponent.js";
+import { Modal } from "./components/modal/modal.js";
 import { ImageComponent } from "./components/page/item/image.js";
 import { NoteComponent } from "./components/page/item/note.js";
 import { TodoComponent } from "./components/page/item/todo.js";
@@ -43,6 +44,21 @@ class App {
     const todoComponent = new TodoComponent("투두", "checklist");
     // todoComponent.attachTo(appRoot, "beforeend");
     this.page.addChild(todoComponent);
+
+    //modal
+    const imgBtn = document.body.querySelector(
+      "#new-image"
+    )! as HTMLButtonElement;
+    imgBtn.addEventListener("click", () => {
+      const modal = new Modal();
+      modal.setOnAddListener(() => {
+        modal.removeFrom(document.body);
+      });
+      modal.setOnCloseListener(() => {
+        modal.removeFrom(document.body);
+      });
+      modal.attachTo(document.body);
+    });
   }
 }
 
