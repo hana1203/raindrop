@@ -1,7 +1,7 @@
 import { BaseComponent } from "../../basecomponent.js";
 
 export class ImageComponent extends BaseComponent<HTMLElement> {
-  constructor(imgsrc: string, title: string) {
+  constructor(title: string, imgsrc: string) {
     super(`<section class="image">
           <div class="image__holder"><img class="img__thumbnail"></div>
           <p class="img__title"></p>

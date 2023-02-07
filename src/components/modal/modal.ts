@@ -8,13 +8,13 @@ export class Modal extends BaseComponent<HTMLElement> implements Composable {
   private closeListener?: OnCloseListener;
   private addListener?: OnAddListener;
   constructor() {
-    super(`<section class='modal'>
+    super(`<dialog class='modal'>
     <div class='modal__container'>
     <button class="close">&times;</button>
-    <div class='modal__body'></div>
+    <div class='modal__body'>    </div>
     <button class="add">ADD</button>
     </div>
-  </section>`);
+  </dialog>`);
 
     //Modal클래스는 close,addListener 외부로부터 전달받아서 등록된 listener가 있다면? 등록된 리스터 호출
     const close = this.element.querySelector(".close")! as HTMLElement;
