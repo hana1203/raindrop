@@ -1,24 +1,36 @@
 import { Component } from "./components/basecomponent.js";
 import { MediaInputComponent } from "./components/input/media-input.js";
+import { TextInputComponent } from "./components/input/text-input.js";
 import { Modal } from "./components/modal/modal.js";
 import { ImageComponent } from "./components/page/item/image.js";
+import { VideoComponent } from "./components/page/item/video.js";
 import { NoteComponent } from "./components/page/item/note.js";
-// import { TodoComponent } from "./components/page/item/todo.js";
-// import { VideoComponent } from "./components/page/item/video.js";
+import { TodoComponent } from "./components/page/item/todo.js";
+
 import {
   Composable,
   PageComponent,
   PageItemComponent,
 } from "./components/page/page.js"; //import시 확장명 작성
 
+type InputComponentConstructor<
+  T extends MediaInputComponent | TextInputComponent
+> = {
+  new (): T;
+};
+
 class App {
-  // private readonly page: PageComponent;
+  //private readonly page: PageComponent;
   private readonly page: Component & Composable; //page변수가 Page컴포넌트인지 아닌지는 잘 모름 - PageComponent라고 커플링하기보다
+  private modalRoot: HTMLElement; //bindElementToModal 함수 만들면서 modalRoot는 클래스안의 멤버변수로 만들어주기
+
   constructor(appRoot: HTMLElement, modalRoot: HTMLElement) {
+    this.modalRoot = modalRoot;
     // this.page = new PageComponent();
     this.page = new PageComponent(PageItemComponent); //dependency injection이후
     this.page.attachTo(appRoot);
 
+    //page에 직접 추가하기
     // //pageitem 띄워보기
     // const pageItem = new PageItemComponent();
     // pageItem.attachTo(appRoot, "beforeend");
@@ -46,44 +58,78 @@ class App {
     // // todoComponent.attachTo(appRoot, "beforeend");
     // this.page.addChild(todoComponent);
 
-    //modal
-    const imgBtn = document.body.querySelector(
-      "#new-image"
-    )! as HTMLButtonElement;
-    imgBtn.addEventListener("click", () => {
-      const modal = new Modal();
-      const mediaInput = new MediaInputComponent();
-      modal.addChild(mediaInput);
-      modal.attachTo(modalRoot);
+    //modal띄우고 내용 pageItem에 추가하기
+    // const imgBtn = document.body.querySelector(
+    //   "#new-image"
+    // )! as HTMLButtonElement;
+    // imgBtn.addEventListener("click", () => {
+    //   const modal = new Modal();
+    //   const mediaInput = new MediaInputComponent();
+    //   modal.addChild(mediaInput);
+    //   modal.attachTo(modalRoot);
 
-      modal.setOnAddListener(() => {
-        modal.removeFrom(modalRoot);
-        this.page.addChild(
-          new ImageComponent(mediaInput.title, mediaInput.note)
-        );
-      });
-      modal.setOnCloseListener(() => {
-        modal.removeFrom(modalRoot);
-      });
-    });
+    //   modal.setOnAddListener(() => {
+    //     modal.removeFrom(modalRoot);
+    //     this.page.addChild(
+    //       new ImageComponent(mediaInput.title, mediaInput.url)
+    //     );
+    //   });
+    //   modal.setOnCloseListener(() => {
+    //     modal.removeFrom(modalRoot);
+    //   });
+    // });
 
-    const noteBtn = document.body.querySelector(
-      "#new-note"
+    //refactoring
+    this.bindElementToModal(
+      "#new-todo",
+      TextInputComponent,
+      (input: TextInputComponent) => new TodoComponent(input.title, input.note)
+    );
+
+    this.bindElementToModal(
+      "#new-note",
+      TextInputComponent,
+      (input: TextInputComponent) => new NoteComponent(input.title, input.note)
+    );
+    this.bindElementToModal(
+      "#new-image",
+      MediaInputComponent,
+      (input: MediaInputComponent) => new ImageComponent(input.title, input.url)
+    );
+    this.bindElementToModal(
+      "#new-video",
+      MediaInputComponent,
+      (input: MediaInputComponent) => new VideoComponent(input.title, input.url)
+    );
+  }
+
+  private bindElementToModal<
+    T extends MediaInputComponent | TextInputComponent
+  >(
+    selector: string,
+    inputComponentConstructor: InputComponentConstructor<T>,
+    makeInputComponent: (input: T) => Component
+  ) {
+    const selectedElement = document.body.querySelector(
+      selector
     )! as HTMLButtonElement;
-    noteBtn.addEventListener("click", () => {
+
+    selectedElement.addEventListener("click", () => {
       const modal = new Modal();
-      const inputComponent = new MediaInputComponent();
+      // const mediaInput = new MediaInputComponent();
+      const inputComponent = new inputComponentConstructor(); //refactor: 각 타입컴포넌트를 내부에서 결정해서 생성하는게 아니고, constructor 타입 전달
+
       modal.addChild(inputComponent);
-      modal.attachTo(modalRoot);
+      modal.attachTo(this.modalRoot);
 
       modal.setOnAddListener(() => {
-        modal.removeFrom(modalRoot);
-        this.page.addChild(
-          new NoteComponent(inputComponent.title, inputComponent.note)
-        );
+        modal.removeFrom(this.modalRoot);
+        const el = makeInputComponent(inputComponent);
+        this.page.addChild(el);
       });
+
       modal.setOnCloseListener(() => {
-        modal.removeFrom(modalRoot);
+        modal.removeFrom(this.modalRoot);
       });
     });
   }
