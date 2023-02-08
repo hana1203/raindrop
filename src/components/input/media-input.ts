@@ -1,8 +1,17 @@
 import { BaseComponent } from "../basecomponent.js";
 
-export class MediaInputComponent extends BaseComponent<HTMLElement> {
+//decoupling을 위해 interface 만들기
+export interface MediaProperty {
+  readonly title: string;
+  readonly url: string;
+}
+
+export class MediaInputComponent
+  extends BaseComponent<HTMLElement>
+  implements MediaProperty
+{
   constructor() {
-    super(`<div>
+    super(`<div class='input__container'>
         <label for="title">Title</label>
         <input type="text" class="title" />
         <label for="url">Url</label>

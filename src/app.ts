@@ -1,6 +1,12 @@
 import { Component } from "./components/basecomponent.js";
-import { MediaInputComponent } from "./components/input/media-input.js";
-import { TextInputComponent } from "./components/input/text-input.js";
+import {
+  MediaInputComponent,
+  MediaProperty,
+} from "./components/input/media-input.js";
+import {
+  TextInputComponent,
+  TextProperty,
+} from "./components/input/text-input.js";
 import { Modal } from "./components/modal/modal.js";
 import { ImageComponent } from "./components/page/item/image.js";
 import { VideoComponent } from "./components/page/item/video.js";
@@ -14,7 +20,7 @@ import {
 } from "./components/page/page.js"; //import시 확장명 작성
 
 type InputComponentConstructor<
-  T extends MediaInputComponent | TextInputComponent
+  T extends (MediaProperty | TextProperty) & Component
 > = {
   new (): T;
 };
@@ -103,8 +109,9 @@ class App {
     );
   }
 
+  //Media, Text 말고도 다른 input 컴포넌트 만들 수 있어서 커플링 하지않고 interface 로 구현
   private bindElementToModal<
-    T extends MediaInputComponent | TextInputComponent
+    T extends (MediaProperty | TextProperty) & Component
   >(
     selector: string,
     inputComponentConstructor: InputComponentConstructor<T>,
