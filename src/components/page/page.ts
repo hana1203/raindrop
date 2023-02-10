@@ -80,9 +80,19 @@ export class PageComponent
       return; //dropTarget이 undefined이면 처리할 로직없음
     }
     if (this.dragTarget && this.dragTarget !== this.dropTarget) {
+      const dropY = event.clientY;
+      const dragElRect = this.dragTarget.getBoundingRect();
+      console.log("dropY", dropY);
+      console.log("dragElRect", dragElRect);
+
       //똑같은 아이템을 drag drop 못하니까 조건추가
       this.dragTarget.removeFrom(this.element);
-      this.dropTarget.attach(this.dragTarget, "beforebegin");
+      //beforebegin으로만하면 밑에있는 아이템을 위로 드래깅하는것만 부드럽게 작동
+      // this.dropTarget.attach(this.dragTarget, "beforebegin");
+      this.dropTarget.attach(
+        this.dragTarget,
+        dropY > dragElRect.y ? "afterend" : "beforebegin"
+      );
     }
   }
 }
@@ -102,6 +112,7 @@ interface ItemContainer extends Component, Composable {
   setOnDragStateListner(listener: OnDragStateListner<PageItemComponent>): void;
   //pageComponent에서 pageItem 컴포넌트 더할때, 페이지아이템 컴포넌트 자체를 받아와서 사용하는게 아니라 어떤 페이지 컴포넌트도 받아올 수있으므로 인터페이스에 정의해두기
   muteChildren(state: "mute" | "unmute"): void;
+  getBoundingRect(): DOMRect;
 }
 
 export class PageItemComponent
@@ -185,6 +196,10 @@ export class PageItemComponent
     } else {
       this.element.classList.remove("mute-children");
     }
+  }
+
+  getBoundingRect(): DOMRect {
+    return this.element.getBoundingClientRect();
   }
 
   // clickCloseBtn(): void {
