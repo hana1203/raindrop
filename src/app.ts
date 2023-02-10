@@ -41,28 +41,21 @@ class App {
     // const pageItem = new PageItemComponent();
     // pageItem.attachTo(appRoot, "beforeend");
 
-    // const imgComponent = new ImageComponent(
-    //   "https://picsum.photos/seed/picsum/200/300",
-    //   "hi img title"
-    // );
-    // // imgComponent.attachTo(appRoot, "beforeend");
-    // this.page.addChild(imgComponent);
-
-    // const videoComponent = new VideoComponent(
-    //   // "https://www.youtube.com/embed/K3-jG52XwuQ",
-    //   "https://youtu.be/K3-jG52XwuQ",
-    //   "iam video"
-    // );
-    // // videoComponent.attachTo(appRoot, "beforeend");
-    // this.page.addChild(videoComponent);
-
-    // const noteComponent = new NoteComponent("note title", "note body");
-    // // noteComponent.attachTo(appRoot, "beforeend");
-    // this.page.addChild(noteComponent);
-
-    // const todoComponent = new TodoComponent("투두", "checklist");
-    // // todoComponent.attachTo(appRoot, "beforeend");
-    // this.page.addChild(todoComponent);
+    //demo용
+    this.page.addChild(
+      new ImageComponent(
+        "hi img title",
+        "https://picsum.photos/seed/picsum/200/300"
+      )
+    );
+    this.page.addChild(
+      new VideoComponent(
+        "iam video", // "https://www.youtube.com/embed/K3-jG52XwuQ",
+        "https://youtu.be/K3-jG52XwuQ"
+      )
+    );
+    this.page.addChild(new NoteComponent("note title", "note body"));
+    this.page.addChild(new TodoComponent("투두", "checklist"));
 
     //modal띄우고 내용 pageItem에 추가하기
     // const imgBtn = document.body.querySelector(
