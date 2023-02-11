@@ -31,9 +31,13 @@ export class PageComponent
     pageItem.attachTo(this.element, "beforeend");
     pageItem.setOnCloseListener(() => {
       pageItem.removeFrom(this.element);
-      this.children.delete(pageItem);
+      this.children.delete(pageItem); //삭제버튼 누르면 children set에서도 없애기
+      console.log("디스칠드런", this.children);
     });
-    this.children.add(pageItem);
+    this.children.add(pageItem); //Set add api
+    console.log("디스칠드런", this.children);
+    // Set(4) {PageItemComponent, PageItemComponent, PageItemComponent, PageItemComponent}
+
     pageItem.setOnDragStateListner(
       (target: ItemContainer, state: DragState) => {
         // console.log(target, state);
@@ -48,12 +52,11 @@ export class PageComponent
             this.updateSections("unmute");
             break;
           case "enter":
-            console.log("무슨타겟enter", target);
-
+            console.log("타겟enter", target);
             this.dropTarget = target;
             break;
           case "leave":
-            console.log("무슨타겟leave", target);
+            console.log("타겟leave", target);
             this.dropTarget = undefined;
             break;
           default:
@@ -70,9 +73,11 @@ export class PageComponent
   }
 
   onDragOver(event: DragEvent) {
+    event.preventDefault();
     console.log("ondragover", event);
   }
   onDrop(event: DragEvent) {
+    event.preventDefault(); //drop할떄 원래 요소가 다시 돌아가는것같은 이상한 효과방지
     console.log("ondrop", event);
     //위치 바꿔주기
 
@@ -80,12 +85,12 @@ export class PageComponent
       return; //dropTarget이 undefined이면 처리할 로직없음
     }
     if (this.dragTarget && this.dragTarget !== this.dropTarget) {
+      //똑같은 아이템을 drag drop 못하니까 조건추가
       const dropY = event.clientY;
       const dragElRect = this.dragTarget.getBoundingRect();
-      console.log("dropY", dropY);
-      console.log("dragElRect", dragElRect);
+      // console.log("dropY", dropY);
+      // console.log("dragElRect", dragElRect);
 
-      //똑같은 아이템을 drag drop 못하니까 조건추가
       this.dragTarget.removeFrom(this.element);
       //beforebegin으로만하면 밑에있는 아이템을 위로 드래깅하는것만 부드럽게 작동
       // this.dropTarget.attach(this.dragTarget, "beforebegin");
@@ -94,6 +99,8 @@ export class PageComponent
         dropY > dragElRect.y ? "afterend" : "beforebegin"
       );
     }
+    //drop이 끝나면 dropTarget에게 함수
+    this.dropTarget.onDropped();
   }
 }
 
@@ -109,10 +116,11 @@ type DragState = "start" | "end" | "enter" | "leave";
 
 interface ItemContainer extends Component, Composable {
   setOnCloseListener(listner: OnCloseListener): void;
-  setOnDragStateListner(listener: OnDragStateListner<PageItemComponent>): void;
+  setOnDragStateListner(listener: OnDragStateListner<ItemContainer>): void;
   //pageComponent에서 pageItem 컴포넌트 더할때, 페이지아이템 컴포넌트 자체를 받아와서 사용하는게 아니라 어떤 페이지 컴포넌트도 받아올 수있으므로 인터페이스에 정의해두기
   muteChildren(state: "mute" | "unmute"): void;
   getBoundingRect(): DOMRect;
+  onDropped(): void;
 }
 
 export class PageItemComponent
@@ -138,6 +146,9 @@ export class PageItemComponent
     // xButton.addEventListener("click", () => {
     //   this.clickCloseBtn();
     // });
+    // clickCloseBtn(): void {
+    //   this.element.remove();
+    // }
 
     //Ellie's solution. item 삭제
     const xButton = this.element.querySelector(
@@ -157,15 +168,23 @@ export class PageItemComponent
   onDragStart(_: DragEvent) {
     //event 인자 받지않는다면 param 아예 없애도 됨
     this.notifyDragObservers("start");
+    //드래그시 드래그하면서 떠다니는 요소아닌 드래그되는 기준 요소 css 투명처리
+    this.element.classList.add("lifted");
   }
   onDragEnd(_: DragEvent) {
     this.notifyDragObservers("end");
+    this.element.classList.remove("lifted");
   }
   onDragEnter(_: DragEvent) {
     this.notifyDragObservers("enter");
+    this.element.classList.add("drop-area");
   }
   onDragLeave(_: DragEvent) {
     this.notifyDragObservers("leave");
+    this.element.classList.remove("drop-area"); //지금드래그하고있는 요소의 drop-area 클래스없애주기
+  }
+  onDropped() {
+    this.element.classList.remove("drop-area"); //drop된 요소의 클래스 없애기
   }
 
   //등록된 콜백함수 있으면 호출
@@ -201,8 +220,4 @@ export class PageItemComponent
   getBoundingRect(): DOMRect {
     return this.element.getBoundingClientRect();
   }
-
-  // clickCloseBtn(): void {
-  //   this.element.remove();
-  // }
 }

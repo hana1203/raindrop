@@ -267,6 +267,3 @@ footer {
 .drop-area {
   border: 2px solid var(--accent-color);
 }
-.beingdragged {
-  opacity: 0.2;
-}
