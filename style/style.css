@@ -26,6 +26,7 @@ li {
   background: transparent;
   border: 0;
   outline: 0;
+  cursor: pointer;
 } */
 
 input,
@@ -148,7 +149,20 @@ footer {
   box-shadow: 2px 2px 20px var(--shadow-color);
 }
 
+/* 버튼 */
+.x-button {
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+
 .modal__close {
+  background: transparent;
+  border: 0;
+  outline: 0;
   align-self: flex-end;
   padding: 0.2rem;
   color: var(--accent-color);
