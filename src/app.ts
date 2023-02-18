@@ -47,19 +47,19 @@ class App {
     //demo용
     this.page.addChild(
       new ImageComponent(
-        "hi img title",
-        "https://picsum.photos/seed/picsum/200/300"
+        "The rainy day is temporary",
+        "https://media.cntraveller.com/photos/611bea2b22be3ca7e5c007d1/4:3/w_2664,h_1998,c_limit/-arabica-exterior-london-nov19-pr.jpg"
       )
     );
     this.page.addChild(
       new ImageComponent(
-        "golden retriever puppies",
-        "https://static.boredpanda.com/blog/wp-content/uploads/2017/07/cute-golden-retriever-puppies-202-5967223e5ba31__605.jpg"
+        "The contrast is why we got 'em",
+        "https://www.pdsa.org.uk/media/7646/golden-retriever-gallery-2.jpg?anchor=center&mode=crop&quality=100&height=500&bgcolor=fff&rnd=133020229510000000"
       )
     );
     this.page.addChild(
       new VideoComponent(
-        "music", // "https://www.youtube.com/embed/K3-jG52XwuQ",
+        "Have a cup of coffee", // "https://www.youtube.com/embed/K3-jG52XwuQ",
         "https://youtu.be/K3-jG52XwuQ"
       )
     );

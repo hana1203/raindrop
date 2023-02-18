@@ -6,10 +6,15 @@ export class VideoComponent extends BaseComponent {
     <h3 class="page-item__title video__title"></h3>
   </section>`);
         const videoEl = this.element.querySelector(".video__holder");
-        const extractedId = formatEmbed(videosrc);
-        videoEl.src = `https://www.youtube.com/embed/${extractedId}`;
         const videoTitle = this.element.querySelector(".video__title");
         videoTitle.textContent = title;
+        const extractedId = formatEmbed(videosrc);
+        if (extractedId.length === 0) {
+            videoEl.src = "";
+        }
+        else {
+            videoEl.src = `https://www.youtube.com/embed/${extractedId}`;
+        }
     }
 }
 function formatEmbed(videosrc) {
