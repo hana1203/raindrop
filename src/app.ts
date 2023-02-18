@@ -1,3 +1,5 @@
+// console.log = function () {};
+
 import { Component } from "./components/basecomponent.js";
 import {
   MediaInputComponent,
@@ -31,6 +33,7 @@ class App {
   private modalRoot: HTMLElement; //bindElementToModal 함수 만들면서 modalRoot는 클래스안의 멤버변수로 만들어주기
 
   constructor(appRoot: HTMLElement, modalRoot: HTMLElement) {
+    //appRoot (.document), modalRoot(document.body) 라는 매개변수로 짓기
     this.modalRoot = modalRoot;
     // this.page = new PageComponent();
     this.page = new PageComponent(PageItemComponent); //dependency injection이후
@@ -49,13 +52,21 @@ class App {
       )
     );
     this.page.addChild(
+      new ImageComponent(
+        "golden retriever puppies",
+        "https://static.boredpanda.com/blog/wp-content/uploads/2017/07/cute-golden-retriever-puppies-202-5967223e5ba31__605.jpg"
+      )
+    );
+    this.page.addChild(
       new VideoComponent(
-        "iam video", // "https://www.youtube.com/embed/K3-jG52XwuQ",
+        "music", // "https://www.youtube.com/embed/K3-jG52XwuQ",
         "https://youtu.be/K3-jG52XwuQ"
       )
     );
-    this.page.addChild(new NoteComponent("note title", "note body"));
-    this.page.addChild(new TodoComponent("투두", "checklist"));
+    this.page.addChild(
+      new NoteComponent("staying healthy", "laughing a lot and be thankful")
+    );
+    this.page.addChild(new TodoComponent("Making vanchau", "red wine 🍷"));
 
     //modal띄우고 내용 pageItem에 추가하기
     // const imgBtn = document.body.querySelector(
@@ -123,9 +134,13 @@ class App {
       modal.attachTo(this.modalRoot);
 
       modal.setOnAddListener(() => {
-        modal.removeFrom(this.modalRoot);
         const el = makeInputComponent(inputComponent);
-        this.page.addChild(el);
+        if (inputComponent.title.length === 0) {
+          alert("Please enter the title.");
+        } else {
+          modal.removeFrom(this.modalRoot);
+          this.page.addChild(el);
+        }
       });
 
       modal.setOnCloseListener(() => {

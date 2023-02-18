@@ -12,14 +12,18 @@ export class VideoComponent extends BaseComponent<HTMLElement> {
       //class가져오는거니 . 기억!!
     )! as HTMLIFrameElement;
 
-    //url 주소 -> id 추출해서 -> embed 형식으로 만들기
-    const extractedId: string = formatEmbed(videosrc);
-    videoEl.src = `https://www.youtube.com/embed/${extractedId}`;
-
     const videoTitle = this.element.querySelector(
       ".video__title"
     )! as HTMLParagraphElement;
     videoTitle.textContent = title;
+
+    //url 주소 -> id 추출해서 -> embed 형식으로 만들기
+    const extractedId: string = formatEmbed(videosrc);
+    if (extractedId.length === 0) {
+      videoEl.src = "";
+    } else {
+      videoEl.src = `https://www.youtube.com/embed/${extractedId}`;
+    }
   }
 }
 
@@ -30,9 +34,3 @@ function formatEmbed(videosrc: string): string {
   console.log("videoId", videoId);
   return videoId;
 }
-
-// <iframe
-//   width="905"
-//   height="509"
-//   src="https://www.youtube.com/embed/wxUexZbRdLU"
-// ></iframe>;
